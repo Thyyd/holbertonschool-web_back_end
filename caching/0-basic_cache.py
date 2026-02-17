@@ -7,7 +7,11 @@ from base_caching import BaseCaching
 
 class BasicCache(BaseCaching):
     """
-    Docstring for BasicCache
+    Class BasicCache that inherits from BaseCaching
+    Redefinition of the put method from BaseCaching
+        - This method adds an item in the cache if parameters are correct
+    Redefinition of the get method from BaseCaching
+        - This method returns the value of an item by key.
     """
     def __init__(self):
         super().__init__()
