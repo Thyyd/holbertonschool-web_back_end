@@ -1,15 +1,15 @@
 #!/usr/bin/env python3
 """
-This module defines the LRUCache class that inherits from
-BaseCaching and implements a dictionary-based LRU cache.
+This module defines the MRUCache class that inherits from
+BaseCaching and implements a dictionary-based MRU cache.
 """
 from base_caching import BaseCaching
 
 
-class LRUCache(BaseCaching):
+class MRUCache(BaseCaching):
     """
-    LRUCache class that inherits from BaseCaching and implements
-    a LRU caching system with eviction when the cache is full.
+    MRUCache class that inherits from BaseCaching and implements
+    a MRU caching system with eviction when the cache is full.
     """
     def __init__(self):
         super().__init__()
