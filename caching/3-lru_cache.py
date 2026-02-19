@@ -26,9 +26,9 @@ class LRUCache(BaseCaching):
         if key is None or item is None:
             return  # Arrête la fonction en ne faisant rien
         else:
-            if key in self.cache_data:
-                self.order.remove(key)
-            self.order.append(key)
+            if key in self.cache_data:  # Si la clé existe dans le cache
+                self.order.remove(key)  # On la retire de notre tableau order
+            self.order.append(key)  # On l'ajoute à notre tableau order
             self.cache_data[key] = item
 
             if len(self.cache_data) > self.MAX_ITEMS:
