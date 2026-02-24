@@ -4,11 +4,13 @@ This module defines the filter_datum function that will obfuscate
 the content of a string
 """
 import re
+from typing import List
 
 
-def filter_datum(fields, redaction, message, separator):
+def filter_datum(fields: List[str], redaction: str, message: str,
+                 separator: str) -> str:
     """
-    Docstring for filter_datum
+    Function that return the log message with the specified fields obfuscated.
 
     Parameters :
         - fields : List of strings representing all fields to obfuscate
@@ -20,5 +22,7 @@ def filter_datum(fields, redaction, message, separator):
     Returns :
         The log message with fields obfuscated
     """
+    # Récupération du pattern
     pattern = f"({'|'.join(fields)})=([^ {separator}]+)"
+    # Retour du message masqué
     return re.sub(pattern, r"\1=" + redaction, message)
