@@ -7,6 +7,9 @@ import re
 from typing import List
 import logging
 
+# Constante PII Fields : Les 5 champs les plus importants à camoufler
+PII_FIELDS = ("name", "email", "phone", "ssn", "password")
+
 
 def filter_datum(fields: List[str], redaction: str, message: str,
                  separator: str) -> str:
@@ -59,3 +62,19 @@ class RedactingFormatter(logging.Formatter):
         message = super().format(record)
         return filter_datum(self.fields, self.REDACTION, message,
                             self.SEPARATOR)
+
+
+def get_logger():
+    """
+    Function get_logger that will return a logging.Logger object.
+    """
+    logger = logging.getLogger("user_data")
+    logger.setLevel(logging.INFO)
+    logger.propagate = False
+
+    # Génération du Stream Handler
+    stream_handler = logging.StreamHandler()
+    stream_handler.setFormatter(RedactingFormatter(fields=PII_FIELDS))
+    logger.addHandler(stream_handler)
+
+    return logger
