@@ -5,6 +5,7 @@ the content of a string
 """
 import re
 from typing import List
+import logging
 
 
 def filter_datum(fields: List[str], redaction: str, message: str,
@@ -26,3 +27,35 @@ def filter_datum(fields: List[str], redaction: str, message: str,
     pattern = f"({'|'.join(fields)})=([^ {separator}]+)"
     # Retour du message masqué
     return re.sub(pattern, r"\1=" + redaction, message)
+
+
+class RedactingFormatter(logging.Formatter):
+    """ Redacting Formatter class """
+
+    REDACTION = "***"
+    FORMAT = "[HOLBERTON] %(name)s %(levelname)s %(asctime)-15s: %(message)s"
+    SEPARATOR = ";"
+
+    def __init__(self, fields: list[str]):
+        """
+        Method __init__ that initialise the formatter
+
+        Parameters :
+            fields: list of strings
+        """
+        super(RedactingFormatter, self).__init__(self.FORMAT)
+        self.fields = fields
+
+    def format(self, record: logging.LogRecord) -> str:
+        """
+        Method that obfuscate Personal data from the record
+
+        Parameters :
+            record: LogRecord to format
+
+        Returns :
+            The formated and obfuscated message
+        """
+        message = super().format(record)
+        return filter_datum(self.fields, self.REDACTION, message,
+                            self.SEPARATOR)
