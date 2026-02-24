@@ -67,6 +67,9 @@ class RedactingFormatter(logging.Formatter):
 def get_logger():
     """
     Function get_logger that will return a logging.Logger object.
+
+    Returns :
+        A configured logging.Logger object that will obfuscate PII fields.
     """
     logger = logging.getLogger("user_data")
     logger.setLevel(logging.INFO)
