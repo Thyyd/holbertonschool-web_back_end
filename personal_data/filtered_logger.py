@@ -17,7 +17,7 @@ PII_FIELDS = ("name", "email", "phone", "ssn", "password")
 def filter_datum(fields: List[str], redaction: str, message: str,
                  separator: str) -> str:
     """
-    Function that return the log message with the specified fields obfuscated.
+    Function that returns the log message with the specified fields obfuscated.
 
     Parameters :
         - fields : List of strings representing all fields to obfuscate
@@ -109,3 +109,42 @@ def get_db() -> mysql.connector.connection.MySQLConnection:
         database=database
     )
     return connection
+
+
+# Fonction main
+def main() -> None:
+    """
+    Main function that will retrieve all users data from the database
+    and display these with the PII fields obfuscated
+    """
+    # Récupération du Logger
+    logger = get_logger()
+
+    # Connexion à la db
+    db = get_db()
+    cursor = db.cursor()  # Permet d'énvoyer des requêtes SQL à la base
+
+    # Récupération des datas de la table users
+    cursor.execute("SELECT * FROM users;")
+
+    # Récupérer les noms des champs
+    headers = []
+    for column in cursor.description:
+        headers.append(column[0])
+
+    # Récupération des valeurs des champs
+    for row in cursor:
+        message = ""
+
+        for i in range(len(row)):
+            message += f"{headers[i]}={row[i]}; "
+
+        logger.info(message.strip())  # Affichage du message avec PII masqués
+
+    # Fermeture de la db et libération de la connexion au réseau
+    cursor.close()
+    db.close()
+
+
+if __name__ == "__main__":
+    main()
