@@ -6,11 +6,14 @@ the content of a string
 import re
 from typing import List
 import logging
+import os
+import mysql.connector
 
 # Constante PII Fields : Les 5 champs les plus importants à camoufler
 PII_FIELDS = ("name", "email", "phone", "ssn", "password")
 
 
+# Fonction filter_datum
 def filter_datum(fields: List[str], redaction: str, message: str,
                  separator: str) -> str:
     """
@@ -32,6 +35,7 @@ def filter_datum(fields: List[str], redaction: str, message: str,
     return re.sub(pattern, r"\1=" + redaction, message)
 
 
+# Classe RedactingFormatter
 class RedactingFormatter(logging.Formatter):
     """ Redacting Formatter class """
 
@@ -39,6 +43,7 @@ class RedactingFormatter(logging.Formatter):
     FORMAT = "[HOLBERTON] %(name)s %(levelname)s %(asctime)-15s: %(message)s"
     SEPARATOR = ";"
 
+    # Constructeur Init
     def __init__(self, fields: List[str]):
         """
         Method __init__ that initialise the formatter
@@ -49,6 +54,7 @@ class RedactingFormatter(logging.Formatter):
         super(RedactingFormatter, self).__init__(self.FORMAT)
         self.fields = fields
 
+    # Méthode format
     def format(self, record: logging.LogRecord) -> str:
         """
         Method that obfuscate Personal data from the record
@@ -64,6 +70,7 @@ class RedactingFormatter(logging.Formatter):
                             self.SEPARATOR)
 
 
+# Fonction get_logger
 def get_logger() -> logging.Logger:
     """
     Function get_logger that will return a logging.Logger object.
@@ -81,3 +88,24 @@ def get_logger() -> logging.Logger:
     logger.addHandler(stream_handler)
 
     return logger
+
+
+# Fonction get_db
+def get_db() -> mysql.connector.connection.MySQLConnection:
+    """
+    Returns a MySQLConnection object connected to the database using
+    credentials from environment variables.
+    """
+    username = os.getenv("PERSONAL_DATA_DB_USERNAME", "root")
+    password = os.getenv("PERSONAL_DATA_DB_PASSWORD", "")
+    host = os.getenv("PERSONAL_DATA_DB_HOST", "localhost")
+    database = os.getenv("PERSONAL_DATA_DB_NAME")
+
+    # Création de la variable connection
+    connection = mysql.connector.connect(
+        user=username,
+        password=password,
+        host=host,
+        database=database
+    )
+    return connection
