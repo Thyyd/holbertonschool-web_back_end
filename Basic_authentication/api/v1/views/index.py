@@ -32,3 +32,11 @@ def unauthorized_route():
         This route will raise a 401 error to test the handler
     """
     abort(401)
+
+
+@app_views.route('/forbidden', methods=['GET'], strict_slashes=False)
+def forbidden_route():
+    """ GET /api/v1/forbidden
+        This route will raise a 403 error to test the handler
+    """
+    abort(403)
