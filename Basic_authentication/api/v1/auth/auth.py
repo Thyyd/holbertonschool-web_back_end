@@ -38,10 +38,25 @@ class Auth:
             l'authentification.
 
         Returns:
-            - bool: False pour l'instant. Dans le futur, True si le chemin
-            nécessite une auth.
+            - bool: True si le chemin donné nécessite une authentification,
+            sinon False
         """
-        return False
+        # path vaut None
+        if path is None:
+            retour = True
+        # excluded_paths vaut None OU est une liste vide
+        elif excluded_paths is None or excluded_paths == []:
+            retour = True
+        else:
+            # Si path ne finit pas par un "/", on le rajoute. (slash tolerant)
+            if path and path[-1] != '/':
+                path += '/'
+            # Si path est dans excluded_path, return True, sinon False
+            if path in excluded_paths:
+                retour = False
+            else:
+                retour = True
+        return retour
 
     # Méthode authorization_header
     def authorization_header(self, request=None) -> str:
