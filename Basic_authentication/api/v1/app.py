@@ -13,6 +13,29 @@ app = Flask(__name__)
 app.register_blueprint(app_views)
 CORS(app, resources={r"/api/v1/*": {"origins": "*"}})
 
+auth = None
+
+AUTH_TYPE = getenv("AUTH_TYPE")
+if AUTH_TYPE == "auth":
+    from api.v1.auth.auth import Auth
+    auth = Auth()
+
+
+@app.before_request
+def before_request():
+    excluded_paths = ['/api/v1/status/',
+                     '/api/v1/unauthorized/',
+                     '/api/v1/forbidden/']
+    # Si auth vaut None OU que le path est un excluded_path on ne fait rien.
+    if auth is None or not auth.require_auth(request.path, excluded_paths):
+        return
+    # Si le header Authorization est absent → renvoyer 401 Unauthorized
+    if auth.authorization_header(request) is None:
+        abort(401)
+    # Si l’utilisateur n’est pas identifié → renvoyer 403 Forbidden
+    if auth.current_user(request) is None:
+        abort(403)
+
 
 @app.errorhandler(404)
 def not_found(error) -> str:
