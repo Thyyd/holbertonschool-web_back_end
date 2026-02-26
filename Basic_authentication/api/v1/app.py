@@ -23,6 +23,22 @@ if AUTH_TYPE == "auth":
 
 @app.before_request
 def before_request():
+    """
+    Handler exécuté avant chaque requête Flask pour sécuriser l'API.
+
+    - Définit une liste de routes publiques (`excluded_paths`) qui
+    ne nécessitent pas d'authentification.
+    - Si l'authentification (`auth`) est désactivée ou si la route est
+    publique, la requête continue normalement.
+    - Sinon, la fonction vérifie :
+        1. La présence du header Authorization. Si absent, renvoie
+        401 Unauthorized.
+        2. La validité de l'utilisateur via `auth.current_user(request)`.
+        Si l'utilisateur n'est pas identifié, renvoie 403 Forbidden.
+
+    Cette fonction garantit que toutes les routes protégées ne sont
+    accessibles qu'aux utilisateurs authentifiés.
+    """
     excluded_paths = ['/api/v1/status/',
                      '/api/v1/unauthorized/',
                      '/api/v1/forbidden/']
