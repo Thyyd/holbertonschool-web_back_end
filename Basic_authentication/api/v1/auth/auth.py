@@ -68,10 +68,16 @@ class Auth:
             défaut None.
 
         Returns:
-            - str: None pour l'instant. Devrait retourner le contenu du header
-            Authorization.
+            - str: None si request vaut None et si request.headers ne contient
+            pas la clé "Authorization".
+            Sinon, retourne le contenu du header Authorization.
         """
-        pass
+        # Si request vaut None ou qu'il n'y a pas de clé "Authorization"
+        if request is None or request.headers.get("Authorization") is None:
+            retour = None
+        else:
+            retour = request.headers.get("Authorization")
+        return retour
 
     # Méthode current_user
     def current_user(self, request=None) -> TypeVar('User'):
