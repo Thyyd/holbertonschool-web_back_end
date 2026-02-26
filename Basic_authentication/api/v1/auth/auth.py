@@ -1,4 +1,10 @@
 #!/usr/bin/env python3
+"""
+Module api.v1.auth.auth
+
+This module contains the class Auth that will manage the authentification to
+the API
+"""
 
 from flask import request
 from typing import List, TypeVar
