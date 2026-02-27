@@ -50,6 +50,19 @@ class BasicAuth(Auth):
     # Méthode decode_base64_authorization_header
     def decode_base64_authorization_header(self, base64_authorization_header:
                                            str) -> str:
+        """
+        Décode une chaîne encodée en Base64 et retourne sa valeur UTF-8.
+
+        Parameters:
+            base64_authorization_header (str): La chaîne Base64 à décoder.
+
+        Returns:
+            str: La chaîne décodée en UTF-8 si le décodage réussit.
+            None si :
+                - base64_authorization_header vaut None
+                - base64_authorization_header n'est pas une string
+                - la chaîne n'est pas un Base64 valide
+        """
         # Si base64_authorization_header vaut None
         if base64_authorization_header is None:
             return None
