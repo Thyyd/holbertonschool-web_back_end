@@ -51,7 +51,7 @@ class Auth:
             # Si path ne finit pas par un "/", on le rajoute. (slash tolerant)
             if path and path[-1] != '/':
                 path += '/'
-            # Si path est dans excluded_path, return True, sinon False
+            # Si path est dans excluded_path, return False, sinon True
             if path in excluded_paths:
                 retour = False
             else:
