@@ -93,14 +93,18 @@ class BasicAuth(Auth):
             Returns:
                 tuple: (email, password) si valide, sinon (None, None)
         """
+        # Si decoded_base64_authorization_header vaut None
         if decoded_base64_authorization_header is None:
             return None, None
 
+        # Si decoded_base64_authorization_header n'est pas une String
         if not isinstance(decoded_base64_authorization_header, str):
             return None, None
 
+        # Si decoded_base64_authorization_header d'a pas de ':'
         if ':' not in decoded_base64_authorization_header:
             return None, None
 
+        # Récupération du String avant et après le ':' dans email et password
         email, password = decoded_base64_authorization_header.split(':', 1)
         return email, password
