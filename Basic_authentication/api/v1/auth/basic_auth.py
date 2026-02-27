@@ -139,8 +139,13 @@ class BasicAuth(Auth):
         if user_pwd is None or not isinstance(user_pwd, str):
             return None
 
+        # On essaye de créer une instance de User, si la base de donnée existe
+        try:
+            user_list = User.search({'email': user_email})
+        except Exception:
+            return None
+
         # Si l'user n'existe pas dans la base de données
-        user_list = User.search({'email': user_email})
         if not user_list:
             return None
 
