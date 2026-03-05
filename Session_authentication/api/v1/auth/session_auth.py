@@ -35,3 +35,19 @@ class SessionAuth(Auth):
         session_id = str(uuid.uuid4())  # Création d'un session_id random
         self.user_id_by_session_id[session_id] = user_id
         return session_id
+
+    # Méthode user_id_for_session_id
+    def user_id_for_session_id(self, session_id: str = None) -> str:
+        """
+        Returns the User ID associated with a given Session ID.
+
+        Parameters:
+            session_id (str): The session ID.
+
+        Returns:
+            str: The corresponding User ID if found, otherwise None.
+        """
+        if session_id is None or not isinstance(session_id, str):
+            return None
+        user_id = self.user_id_by_session_id.get(session_id)  # récup user_id
+        return user_id
