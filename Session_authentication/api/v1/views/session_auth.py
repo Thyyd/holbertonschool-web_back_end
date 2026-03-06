@@ -82,6 +82,6 @@ def delete():
     """
     from api.v1.app import auth
     destroyed = auth.destroy_session(request)
-    if destroyed is False:
+    if not destroyed:
         abort(404)
     return jsonify({}), 200
