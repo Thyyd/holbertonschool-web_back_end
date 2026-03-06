@@ -76,3 +76,45 @@ class SessionAuth(Auth):
             return None
         user = User.get(user_id)
         return user
+
+    # Méthode destroy_session
+    def destroy_session(self, request=None):
+        """
+        Deletes a user session / logs out the user.
+
+        Retrieves the Session ID from the request cookie and removes the
+        corresponding session from the session store.
+
+        Steps:
+            1. If `request` is None, returns False.
+            2. Retrieves the Session ID from the request cookie using
+            `self.session_cookie`.
+            3. If the Session ID is missing, returns False.
+            4. Checks if the Session ID corresponds to a valid User ID using
+            `self.user_id_for_session_id`.
+            5. If no user is found, returns False.
+            6. Otherwise, deletes the session from `self.user_id_by_session_id`
+            and returns True.
+
+        Parameters:
+            request (Flask request): The HTTP request object containing the
+            session cookie.
+
+        Returns:
+            bool: True if the session was successfully deleted, False
+            otherwise.
+        """
+        # Vérification la requête n'est pas None
+        if request is None:
+            return False
+        # Vérification qu'il y ait bien une Session ID
+        request_session_id = self.session_cookie(request)
+        if not request_session_id:
+            return False
+        # Vérification que la Session ID soit bien liée à un User ID
+        user_id = self.user_id_for_session_id(request_session_id)
+        if user_id is None:
+            return False
+        # Suppression de la clé dans le Dictionnaire
+        self.user_id_by_session_id.pop(request_session_id)
+        return True

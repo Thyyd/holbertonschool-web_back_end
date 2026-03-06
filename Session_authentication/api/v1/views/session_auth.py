@@ -56,3 +56,32 @@ def session_authentification():
     response.set_cookie(session_name, session_id)
 
     return response
+
+
+@app_views.route('/api/v1/auth_session/logout', methods=['DELETE'],
+                 strict_slashes=False)
+def delete():
+    """
+    Logs out the user by deleting their session.
+
+    This route handles DELETE requests to '/api/v1/auth_session/logout'.
+    It uses the SessionAuth instance `auth` to destroy the session associated
+    with the request's cookie.
+
+    Steps:
+        1. Retrieve the session from the request cookie using
+        `auth.destroy_session(request)`.
+        2. If no valid session is found or the session cannot be deleted,
+        abort with a 404 error.
+        3. If the session is successfully deleted, return an empty JSON
+        dictionary with status code 200.
+
+    Returns:
+        JSON response: An empty JSON dictionary {} with HTTP 200 if successful.
+        Aborts with HTTP 404 if no session is found or deletion fails.
+    """
+    from api.v1.app import auth
+    destroyed = auth.destroy_session(request)
+    if destroyed is False:
+        abort(404)
+    return jsonify({}), 200
