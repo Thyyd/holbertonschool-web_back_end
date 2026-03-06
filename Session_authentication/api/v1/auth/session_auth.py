@@ -57,9 +57,10 @@ class SessionAuth(Auth):
         """
         Return the User instance based on the session cookie.
 
-        Retrieves the session ID from the request cookie using session_cookie(),
-        then finds the corresponding user ID using user_id_for_session_id().
-        Finally returns the User instance associated with that user ID.
+        Retrieves the session ID from the request cookie using
+        session_cookie(), then finds the corresponding user ID
+        using user_id_for_session_id(). Finally returns the User
+        instance associated with that user ID.
 
         Parameters:
             request: Flask request object.
