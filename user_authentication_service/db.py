@@ -52,7 +52,7 @@ class DB:
         return user
 
     # Méthode find_user_by
-    def find_user_by(self, **kwargs: dict[str, Any]) -> User:
+    def find_user_by(self, **kwargs) -> User:
         """
         Finds a user in the `users` table based on dynamic criteria.
 
