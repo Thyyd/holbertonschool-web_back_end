@@ -73,16 +73,11 @@ class DB:
         Returns:
             User: the first user found that matches the criteria.
         """
-        # Parcours des noms de champs passés en paramètres
-        for key in kwargs:
-            # Si un nom de champ n'est pas dans la DB, raise l'erreur
-            if key not in User.__table__.columns:
-                raise InvalidRequestError
-        # Récupère les valeurs associées au champ
-        query = self._session.query(User).filter_by(**kwargs)
-        user = query.first()
-        # S'il n'y a pas de valeur dans user, raise l'erreur
-        if user is None:
+        try:
+            # Effectue une requête "SELECT * FROM users" et retourne le res
+            user = self._session.query(User).filter_by(**kwargs).one()
+            return user
+        except NoResultFound:  # Raised par SQLAlchemy si aucun résultat trouvé
             raise NoResultFound
-
-        return user
+        except InvalidRequestError:  # Raised par SQLAlchemy si kwarg invalide
+            raise InvalidRequestError
