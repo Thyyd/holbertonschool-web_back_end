@@ -7,6 +7,7 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm.session import Session
 from sqlalchemy.exc import InvalidRequestError
 from sqlalchemy.orm.exc import NoResultFound
+from typing import Any
 
 from user import Base, User
 
@@ -51,7 +52,7 @@ class DB:
         return user
 
     # Méthode find_user_by
-    def find_user_by(self, **kwargs):
+    def find_user_by(self, **kwargs: dict[str, Any]) -> User:
         """
         Finds a user in the `users` table based on dynamic criteria.
 
