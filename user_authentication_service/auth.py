@@ -1,8 +1,6 @@
 #!/usr/bin/env python3
 """ Auth module
 """
-from user import User
-from db import DB
 import bcrypt
 
 
