@@ -81,3 +81,16 @@ class DB:
             raise NoResultFound
         except InvalidRequestError:  # Raised par SQLAlchemy si kwarg invalide
             raise InvalidRequestError
+
+    # Méthode update_user
+    def update_user(self, user_id: int, **kwargs) -> None:
+        """
+        """
+        # Recherche de l'user via son id
+        user = self.find_user_by(id=user_id)
+        for key, value in kwargs.items():
+            # Si la clé n'existe pas
+            if key not in User.__table__.columns.keys():
+                raise ValueError
+            setattr(user, key, value)
+        self._session.commit()  # Midifie la valeur dans la DB
