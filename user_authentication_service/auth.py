@@ -2,6 +2,7 @@
 """ Auth module
 """
 import bcrypt
+import uuid
 from db import DB
 from user import User
 from sqlalchemy.orm.exc import NoResultFound
@@ -20,6 +21,17 @@ def _hash_password(password: str) -> bytes:
     """
     # Hashage du MdP en convertissant password en bytes et en générant un salt
     return bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt())
+
+
+# Méthode _generate_uuid
+def _generate_uuid() -> str:
+    """
+    Generate a new UUID.
+
+    Returns:
+        str: String representation of a newly generated UUID.
+    """
+    return str(uuid.uuid4())
 
 
 class Auth:
