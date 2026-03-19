@@ -94,3 +94,18 @@ class Auth:
         # S'il n'existe pas, return False
         except NoResultFound:
             return False
+
+    # Méthode create_session
+    def create_session(self, email: str) -> str:
+        try:
+            # Vérification de l'existence de l'user
+            user = self._db.find_user_by(email=email)
+            # Génération de la session ID
+            session_id = _generate_uuid()
+
+            # Sauvegarde dans la DB
+            self._db.update_user(user.id, session_id=session_id)
+
+            return session_id
+        except NoResultFound:
+            return None
