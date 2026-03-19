@@ -148,9 +148,9 @@ class Auth:
         """
         try:
             # Vérification de l'existance de l'user
-            user = self._db.find_user_by(user_id=user_id)
+            user = self._db.find_user_by(id=user_id)
 
-            # Mdifie sa session_id à None dans la DB
+            # Modifie sa session_id à None dans la DB
             self._db.update_user(user.id, session_id=None)
 
             return None
