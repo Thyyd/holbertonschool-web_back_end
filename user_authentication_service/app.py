@@ -96,5 +96,29 @@ def profile():
     return jsonify({"email": user.email}), 200
 
 
+@app.route("/reset_password", methods=["POST"], strict_slashes=False)
+def get_reset_password_token():
+    """
+    Endpoint to generate a password reset token for a user based on the
+    email retrieved form data.
+
+    If the email is registered, returns the user's email and reset_token with
+    a 200 HTTP status code.
+    Otherwise, returns a 403 error.
+
+    Returns:
+        JSON response with the email and reset token on success.
+        Aborts with 403 if the email is not registered.
+    """
+    # Récupération email
+    email = request.form.get('email')
+    try:
+        # Génération d'un reset_token.
+        reset_token = AUTH.get_reset_password_token(email)
+        return jsonify({"email": email, "reset_token": reset_token}), 200
+    except ValueError:
+        abort(403)
+
+
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port="5000")
