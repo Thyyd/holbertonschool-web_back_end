@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """ Basic Flask app
 """
-from flask import Flask, jsonify, request, abort
+from flask import Flask, jsonify, request, abort, redirect
 from auth import Auth
 
 app = Flask(__name__)
@@ -55,6 +55,26 @@ def login():
     response.set_cookie("session_id", session_id)
 
     return response
+
+
+@app.route("/sessions", methods=["DELETE"], strict_slashes=False)
+def logout():
+    """
+    Logs out the current user.
+
+    Retrieves the session_id from the request cookies, finds the
+    corresponding user and destroys the session. If the user exists,
+    redirects to the home page. Otherwise, aborts with a 403 status code.
+    """
+    # Récupération de la session_id
+    user_session_id = request.cookies.get("session_id")
+    # Récupération de l'user grâce à la session_id
+    user = AUTH.get_user_from_session_id(user_session_id)
+    # Si l'user n'existe pas
+    if user is None:
+        abort(403)
+    AUTH.destroy_session(user.id)
+    return redirect("/")
 
 
 if __name__ == "__main__":
