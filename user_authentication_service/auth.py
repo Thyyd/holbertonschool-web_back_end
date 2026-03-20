@@ -97,6 +97,19 @@ class Auth:
 
     # Méthode create_session
     def create_session(self, email: str) -> str:
+        """
+        Create a new session for the user corresponding to the given email.
+
+        This method finds the user associated with the provided email,
+        generates a new UUID as a session ID, stores it in the database,
+        and returns the session ID.
+
+        Args:
+            email (str): The email address of the user.
+
+        Returns:
+            str: The generated session ID. Returns None if no user is found.
+        """
         try:
             # Vérification de l'existence de l'user
             user = self._db.find_user_by(email=email)
@@ -200,11 +213,10 @@ class Auth:
         try:
             # Vérification de l'existance de l'user
             user = self._db.find_user_by(reset_token=reset_token)
+            # Hachage du password
+            user_pwd = _hash_password(password)
+            self._db.update_user(user.id,
+                                 hashed_password=user_pwd,
+                                 reset_token=None)
         except NoResultFound:
             raise ValueError
-
-        # Hachage du password
-        user_pwd = _hash_password(password)
-        self._db.update_user(user.id,
-                             hashed_password=user_pwd,
-                             reset_token=None)
