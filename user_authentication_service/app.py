@@ -120,5 +120,31 @@ def get_reset_password_token():
         abort(403)
 
 
+@app.route("/reset_password", methods=["PUT"], strict_slashes=False)
+def update_password():
+    """
+    Handle PUT /reset_password requests.
+
+    Retrieve the email, reset token, and new password from the request
+    form data. Attempt to update the user's password using the provided
+    reset token.
+
+    If the token is invalid, respond with a 403 HTTP status code.
+    If the password is successfully updated, respond with a JSON payload
+    containing the user's email and a confirmation message.
+    """
+    # Récupération email, reset_token et new_password
+    email = request.form.get('email')
+    reset_token = request.form.get('reset_token')
+    new_password = request.form.get('new_password')
+
+    try:
+        # Modification du MdP
+        AUTH.update_password(reset_token, new_password)
+        return jsonify({"email": email, "message": "Password updated"}), 200
+    except ValueError:
+        abort(403)
+
+
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port="5000")
