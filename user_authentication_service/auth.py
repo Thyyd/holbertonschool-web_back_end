@@ -156,3 +156,27 @@ class Auth:
             return None
         except NoResultFound:
             return None
+
+    # Méthode get_reset_password_token
+    def get_reset_password_token(self, email: str) -> str:
+        """Generate and store a reset token for a user.
+
+        Parameters:
+            email (str): The email of the user requesting a password reset.
+
+        Raises:
+            ValueError: If no user is found with the provided email.
+
+        Returns:
+            str: The generated reset token.
+        """
+        try:
+            # Vérification de l'existance de l'user
+            user = self._db.find_user_by(email=email)
+            # Génération d'un nouveau UUID pour réinitialiser le MdP
+            reset_token = _generate_uuid()
+            self._db.update_user(user.id, reset_token=reset_token)
+
+            return reset_token
+        except NoResultFound:
+            raise ValueError
