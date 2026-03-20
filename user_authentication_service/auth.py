@@ -200,9 +200,11 @@ class Auth:
         try:
             # Vérification de l'existance de l'user
             user = self._db.find_user_by(reset_token=reset_token)
-            # Hachage du password
-            user_pwd = _hash_password(password)
-            self._db.update_user(user.id, hashed_password=user_pwd)
-            self._db.update_user(user.id, reset_token=None)
         except NoResultFound:
             raise ValueError
+
+        # Hachage du password
+        user_pwd = _hash_password(password)
+        self._db.update_user(user.id,
+                             hashed_password=user_pwd,
+                             reset_token=None)
