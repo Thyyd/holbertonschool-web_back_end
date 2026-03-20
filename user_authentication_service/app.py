@@ -16,6 +16,14 @@ def Welcome():
 
 @app.route("/users", methods=["POST"], strict_slashes=False)
 def users():
+    """
+    Handle POST /users to register a new user.
+
+    Expects "email" and "password" in form data. Returns a JSON response
+    with the email and a success message if the user is created.
+    If the email is already registered, returns an error message with
+    status code 400.
+    """
     email = request.form.get('email')
     pwd = request.form.get('password')
 
