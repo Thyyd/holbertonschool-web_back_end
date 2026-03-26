@@ -3,8 +3,9 @@
 
 import unittest
 from client import GithubOrgClient
-from parameterized import parameterized
-from unittest.mock import patch, PropertyMock
+from fixtures import TEST_PAYLOAD
+from parameterized import parameterized, parameterized_class
+from unittest.mock import patch, PropertyMock, Mock
 
 
 class TestGithubOrgClient(unittest.TestCase):
@@ -83,3 +84,54 @@ class TestGithubOrgClient(unittest.TestCase):
         """
         result = GithubOrgClient.has_license(repo, license_key)
         self.assertEqual(result, expected)
+
+
+@parameterized_class(
+    ("org_payload", "repos_payload", "expected_repos", "apache2_repos"),
+    TEST_PAYLOAD
+)
+class TestIntegrationGithubOrgClient(unittest.TestCase):
+    """
+    Class for the Integration tests
+    """
+    @classmethod
+    def setUpClass(cls):
+        """
+        Setup for integration tests: mocks requests.get with fixture payloads
+        """
+        # Création du patcher pour request.get
+        cls.get_patcher = patch('requests.get')
+        mock_get = cls.get_patcher.start()
+
+        # Création du side_effect retournant la bonne payload selon l'URL
+        def side_effect(url):
+            mock_response = Mock()
+
+            if url == "https://api.github.com/orgs/google":
+                mock_response.json.return_value = cls.org_payload
+            elif url == "https://api.github.com/orgs/google/repos":
+                mock_response.json.return_value = cls.repos_payload
+            else:
+                mock_response.json.return_value = {}
+
+            return mock_response
+
+        # Définition de ce que mock doit retourner
+        mock_get.side_effect = side_effect
+
+    @classmethod
+    def tearDownClass(cls):
+        """
+        Stop the requests.get patcher after all integration tests.
+        """
+        cls.get_patcher.stop()
+
+    def test_public_repos(self):
+        """
+        Integration test for GithubOrgClient.public_repos
+        """
+        client = GithubOrgClient("google")
+        # Vérification que la méthode retourne la liste attendue de repos
+        self.assertEqual(client.public_repos(), self.expected_repos)
+        # Vérification que la méthode retourne la liste de repo avec la license
+        self.assertEqual(client.public_repos("apache-2.0"), self.apache2_repos)
