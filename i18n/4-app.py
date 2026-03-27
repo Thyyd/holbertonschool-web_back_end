@@ -34,6 +34,12 @@ def get_locale() -> str:
     Returns:
         str: The best matching language code ('en' or 'fr').
     """
+    # Récupération de locale
+    locale = request.args.get("locale")
+    # S'il existe et qu'il est dans Config.LANGUAGES, on force ce langage
+    if locale and locale in Config.LANGUAGES:
+        return locale
+    # Sinon, la fonction fonctionne normalement
     language = request.accept_languages.best_match(Config.LANGUAGES)
     return language
 
