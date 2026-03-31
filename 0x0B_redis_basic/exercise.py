@@ -90,7 +90,7 @@ class Cache:
             return data
 
     # Méthode get_int
-    def get_int(self, key):
+    def get_int(self, key: str) -> int:
         """
         Retrieve a value from Redis and convert it to int.
         Returns None if key does not exist.
@@ -98,13 +98,9 @@ class Cache:
         return self.get(key, int)
 
     # Méthode get_str
-    def get_str(self, key):
+    def get_str(self, key: str) -> str:
         """
         Retrieve a value from Redis and convert it to UFT-8 string.
         Returns None if key does not exist.
         """
-        data = self.get(key)
-        if data is None:
-            return None
-        data = data.decode("utf-8")
-        return data
+        return self.get(key, lambda d: d.decode("utf-8"))
