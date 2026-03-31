@@ -75,7 +75,8 @@ class Cache:
         return key
 
     # Getter
-    def get(self, key: str, fn: Optional[Callable] = None) -> bytes:
+    def get(self, key: str, fn: Optional[Callable] = None) -> Union[
+            str, bytes, int, float, None]:
         """
         Retrieve a value from Redis by key.
         Optionally apply a conversion function `fn` to the result.
@@ -90,7 +91,7 @@ class Cache:
             return data
 
     # Méthode get_int
-    def get_int(self, key: str) -> int:
+    def get_int(self, key: str) -> Optional[int]:
         """
         Retrieve a value from Redis and convert it to int.
         Returns None if key does not exist.
@@ -98,9 +99,9 @@ class Cache:
         return self.get(key, int)
 
     # Méthode get_str
-    def get_str(self, key: str) -> str:
+    def get_str(self, key: str) -> Optional[str]:
         """
-        Retrieve a value from Redis and convert it to UFT-8 string.
+        Retrieve a value from Redis and convert it to UTF-8 string.
         Returns None if key does not exist.
         """
         return self.get(key, lambda d: d.decode("utf-8"))
