@@ -5,7 +5,7 @@ Basic Redis Module
 
 import redis
 import uuid
-from typing import Union, Callable
+from typing import Union, Callable, Optional
 from functools import wraps
 
 
@@ -75,7 +75,7 @@ class Cache:
         return key
 
     # Getter
-    def get(self, key: str, fn=None) -> bytes:
+    def get(self, key: str, fn: Optional[Callable] = None) -> bytes:
         """
         Retrieve a value from Redis by key.
         Optionally apply a conversion function `fn` to the result.
