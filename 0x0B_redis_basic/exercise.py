@@ -125,7 +125,7 @@ class Cache:
         data = self._redis.get(key)
         if data is None:
             return None
-        if fn:
+        if fn is not None:
             return fn(data)
         else:
             return data
