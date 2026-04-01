@@ -127,8 +127,7 @@ class Cache:
             return None
         if fn is not None:
             return fn(data)
-        else:
-            return data
+        return data
 
     # Méthode get_int
     def get_int(self, key: str) -> Optional[int]:
