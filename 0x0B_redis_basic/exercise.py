@@ -33,7 +33,6 @@ def count_calls(method: Callable) -> Callable:
         Returns:
             The return value of the original method
         """
-        # Création de la clé Redis qui agira comme un compteur
         key = method.__qualname__
         # Incrémente la valeur d'une clé de 1
         self._redis.incr(key)
