@@ -81,6 +81,46 @@ def call_history(method: Callable) -> Callable:
     return wrapper
 
 
+def replay(method: Callable) -> None:
+    """
+    Display the history of calls for a given method stored in Redis.
+
+    Shows how many times the method was called and lists the
+    inputs and outputs of each call.
+
+    Parameters:
+        method (Callable): The method whose call history is displayed.
+
+    Returns:
+        None
+    """
+    # Création d'une instance Redis pour l'utiliser plus tard
+    redis_client = redis.Redis()
+
+    # Récupération de la clé de la méthode
+    method_name = method.__qualname__
+
+    # Récupération du nombre d'appel de la méthode et conversion en int
+    count = redis_client.get(method_name)
+    if count is not None:
+        count = int(count)
+    else:
+        count = 0
+    print(f"{method_name} was called {count} times:")
+
+    # Création des clés inputs et outputs
+    inputs_key = method_name + ":inputs"
+    outputs_key = method_name + ":outputs"
+
+    # Récupération des listes inputs & outputs
+    inputs = redis_client.lrange(inputs_key, 0, -1)
+    outputs = redis_client.lrange(outputs_key, 0, -1)
+    # Association des inputs et outputs et affichage de ceux-ci
+    for input, output in zip(inputs, outputs):
+        print(f"{method_name}(*{input.decode('utf-8')}) ->"
+              f"{output.decode('utf-8')}")
+
+
 class Cache:
     """
     Class Cache for the DB
