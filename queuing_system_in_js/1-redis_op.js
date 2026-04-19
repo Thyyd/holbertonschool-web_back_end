@@ -20,6 +20,10 @@ function setNewSchool(schoolName, value)
 function displaySchoolValue(schoolName)
 {
     client.get(schoolName, function(err, value) {
+        if (err) {
+            console.log(err);
+            return;
+        }
         console.log(value);
     })
 }
